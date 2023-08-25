@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Take-Out</string>
+    <string name="gcp_id">675622542275-l9j2pimc97lt8r93p24otq6icb3dnak7.apps.googleusercontent.com</string>
+    <string name="home">Home</string>
+    <string name="month_view">Month View</string>
+    <string name="trend_view">Trend View</string>
+    <string name="settings">Settings</string>
+    <string name="add_new_entry">Add New Entry</string>
+    <string name="food_list">Food List\n</string>
+    <string name="food_item">Food Item</string>
+</resources>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "675622542275",
+    "project_id": "takeout-8dd14",
+    "storage_bucket": "takeout-8dd14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675622542275:android:ee55ef97ff22565499bb76",
+        "android_client_info": {
+          "package_name": "com.example.takeout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675622542275-bcquoijktbe535t258ljiq47ak9fa23p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9LEKIOLprksOGJxWx4apc_LoavFPS-NA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675622542275-bcquoijktbe535t258ljiq47ak9fa23p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
