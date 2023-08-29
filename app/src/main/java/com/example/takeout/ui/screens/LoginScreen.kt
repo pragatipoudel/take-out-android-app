@@ -33,7 +33,6 @@ fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
-
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = {result ->
             user = result.user
@@ -48,7 +47,6 @@ fun LoginScreen(
     val context = LocalContext.current
 
     if (user == null) {
-
         Column(
             modifier = modifier
         ) {

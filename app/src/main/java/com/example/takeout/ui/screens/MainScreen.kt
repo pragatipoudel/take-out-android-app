@@ -1,19 +1,10 @@
 package com.example.takeout.ui.screens
 
-import android.util.Log
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,12 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,7 +27,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.takeout.R
 import com.example.takeout.ui.Screen
-import com.example.takeout.ui.data.DataSource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,9 +36,9 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-
-    val screenTitle = stringResource(Screen.valueOf(currentBackStackEntry?.destination?.route ?: Screen.Home.name).resourceId)
-
+    val route = currentBackStackEntry?.destination?.route ?: Screen.Home.name
+    val parentRoute = route.split("/")[0]
+    val screenTitle = stringResource(Screen.valueOf(parentRoute).resourceId)
 
     Scaffold(
         topBar = {
@@ -81,13 +68,16 @@ fun MainScreen(
             composable(Screen.Settings.name) {
                 SettingsScreen()
             }
-            composable(Screen.AddNewEntry.name) {
-                AddNewEntryScreen()
+            composable(Screen.AddFoodItem.name) {
+                FoodItemScreen(navController, modifier=Modifier.fillMaxSize())
             }
             composable(Screen.FoodList.name) {
-                FoodListScreen()
+                FoodListScreen(navController = navController, modifier=Modifier.fillMaxSize())
             }
-
+            composable(Screen.EditFoodItem.name + "/{foodId}") { backStackEntry ->
+                val foodId = backStackEntry.arguments?.getString("foodId")!!
+                FoodItemScreen(navController = navController, foodId = foodId, modifier=Modifier.fillMaxSize())
+            }
         }
 
     }
@@ -104,7 +94,7 @@ fun MyNewTopAppBar(
 
     CenterAlignedTopAppBar(
         title = { Text(title) },
-        modifier = Modifier
+        modifier = modifier
             .background(Color.Cyan),
         navigationIcon = { if (canBack) {
             IconButton(onClick = { goBack() }) {
