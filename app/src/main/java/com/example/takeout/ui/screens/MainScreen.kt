@@ -33,6 +33,7 @@ import com.example.takeout.ui.Screen
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    onLogOut: () -> Unit
 ) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -60,13 +61,13 @@ fun MainScreen(
                 HomeScreen(navController, modifier=Modifier.fillMaxSize())
             }
             composable(Screen.MonthView.name) {
-                MonthViewScreen()
+                MonthViewScreen(navController = navController, modifier=Modifier.fillMaxSize())
             }
             composable(Screen.TrendView.name) {
                 TrendViewScreen()
             }
             composable(Screen.Settings.name) {
-                SettingsScreen()
+                SettingsScreen(onLogOut = onLogOut)
             }
             composable(Screen.AddFoodItem.name) {
                 FoodItemScreen(navController, modifier=Modifier.fillMaxSize())
@@ -112,7 +113,7 @@ fun BottomNavBar(navController: NavHostController) {
     val items = listOf(
         Screen.Home,
         Screen.MonthView,
-        Screen.TrendView,
+//        Screen.TrendView,
         Screen.Settings
     )
 

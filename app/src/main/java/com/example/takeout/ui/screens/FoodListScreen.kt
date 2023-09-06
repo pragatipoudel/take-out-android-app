@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.takeout.ui.Food
 import com.example.takeout.ui.Screen
@@ -37,15 +38,14 @@ fun FoodListScreen(
     navController: NavController
 ) {
     val foodStorageService = FoodStorageService()
-    val foodList = foodStorageService.getAll().collectAsState(listOf()).value
+    val foodList = foodStorageService.getAll().collectAsStateWithLifecycle(listOf()).value
 
     LazyColumn(modifier = modifier) {
         items(foodList) { food ->
             FoodItem(
                 food = food,
                 navController = navController,
-                )
-
+            )
         }
     }
 }

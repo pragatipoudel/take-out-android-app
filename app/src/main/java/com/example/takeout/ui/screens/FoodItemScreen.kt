@@ -33,8 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.takeout.ui.Food
+import com.example.takeout.ui.model.TakeoutViewModel
 import com.example.takeout.ui.services.FoodStorageService
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -45,38 +48,25 @@ import java.text.DateFormat
 fun FoodItemScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    foodId: String? = null
+    foodId: String? = null,
+    takeoutViewModel: TakeoutViewModel = viewModel()
 ) {
     val scope = rememberCoroutineScope()
-
-    var cost by remember { mutableStateOf("") }
-    var note by remember { mutableStateOf("") }
-    var date by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var errorMessage by remember { mutableStateOf("") }
-    var showDatePicker by remember {
-        mutableStateOf(false)
-    }
+    val takeOutUiState by takeoutViewModel.uiState.collectAsStateWithLifecycle()
 
     val foodStorageService = FoodStorageService()
     if (foodId != null) {
         LaunchedEffect(foodId) {
-            val food = foodStorageService.get(foodId)
-            if (food == null) {
-                errorMessage = "Food does not exist."
-            } else {
-                cost = food.cost.toString()
-                date = food.date
-                note = food.note
-            }
+            takeoutViewModel.load(foodId)
         }
     }
 
-    if (errorMessage != "") {
-        Text(errorMessage)
+    if (takeOutUiState.errorMessage != "") {
+        Text(takeOutUiState.errorMessage)
         return
     }
 
-    val dateString = DateFormat.getDateInstance().format(date)
+    val dateString = DateFormat.getDateInstance().format(takeOutUiState.date)
 
     Column(
         modifier = modifier
@@ -86,14 +76,14 @@ fun FoodItemScreen(
     ) {
 
         OutlinedTextField(
-            value = note,
-            onValueChange = { note = it },
+            value = takeOutUiState.note,
+            onValueChange = { takeoutViewModel.setNote(it) },
             label = { Text("Note") }
         )
 
         OutlinedTextField(
-            value = cost,
-            onValueChange = { cost = it },
+            value = takeOutUiState.cost,
+            onValueChange = { takeoutViewModel.setCost(it) },
             label = { Text("Cost ($)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
@@ -107,7 +97,7 @@ fun FoodItemScreen(
                     LaunchedEffect(interactionSource) {
                         interactionSource.interactions.collect() {
                             if (it is PressInteraction.Release) {
-                                showDatePicker = true
+                                takeoutViewModel.showDatePicker(true)
                             }
                         }
                     }
@@ -136,18 +126,8 @@ fun FoodItemScreen(
             }
             Button(
                 onClick = {
-                    val food = Food(
-                        id = foodId ?: "",
-                        date = date,
-                        cost = cost.toDouble(),
-                        note = note
-                    )
                     scope.launch {
-                        if (foodId == null) {
-                            foodStorageService.add(food)
-                        } else {
-                            foodStorageService.update(food)
-                        }
+                        takeoutViewModel.save(foodId)
                         navController.popBackStack()
                     }
                 }) {
@@ -164,11 +144,11 @@ fun FoodItemScreen(
 
 
 
-    if (showDatePicker) {
+    if (takeOutUiState.showDatePicker) {
         MyDatePickerDialog(
-            value = date,
-            onDateSelected = { date = it },
-            onDismiss = { showDatePicker = false }
+            value = takeOutUiState.date,
+            onDateSelected = { takeoutViewModel.setDate(it) },
+            onDismiss = { takeoutViewModel.showDatePicker(false) }
         )
     }
 

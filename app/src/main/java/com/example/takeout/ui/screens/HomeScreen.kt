@@ -1,7 +1,6 @@
 package com.example.takeout.ui.screens
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,18 +28,7 @@ import com.example.takeout.R
 import com.example.takeout.ui.Food
 import com.example.takeout.ui.Screen
 import com.example.takeout.ui.services.FoodStorageService
-import java.text.DateFormat
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.Month
-import java.time.Year
-import java.time.YearMonth
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.temporal.TemporalAdjuster
-import java.time.temporal.TemporalAdjusters
-import java.util.Calendar
-import java.util.logging.Logger
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,12 +38,15 @@ fun HomeScreen(
     modifier: Modifier = Modifier) {
 
     val circleBackgroundColor = MaterialTheme.colorScheme.secondaryContainer
-    val currentMonth = LocalDate.now().month
-    val currentYear = LocalDate.now().year
+    val currentDate = LocalDate.now()
+    val currentMonth = currentDate.month
+    val currentYear = currentDate.year
 
     val foodStorageService = FoodStorageService()
     val foodList = foodStorageService.getByMonth(currentYear, currentMonth).collectAsState(listOf()).value
     val total = getTotal(foodList)
+
+
 
     Column(
         modifier = modifier,

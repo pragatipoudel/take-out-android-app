@@ -7,5 +7,4 @@ data class Food(
     val date: Long = 0L,
     val cost: Double = 0.0,
     val note: String = ""
-
 )

@@ -1,6 +1,5 @@
 package com.example.takeout.ui.screens
 
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,9 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -43,6 +42,7 @@ fun LoginScreen(
         }
     )
 
+
     val token = stringResource(id = R.string.gcp_id)
     val context = LocalContext.current
 
@@ -65,7 +65,8 @@ fun LoginScreen(
         }
     } else {
         MainScreen(
-            modifier = modifier
+            modifier = modifier,
+            onLogOut = { user = null }
         )
     }
         
