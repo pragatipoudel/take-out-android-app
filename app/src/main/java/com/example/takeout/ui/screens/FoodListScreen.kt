@@ -9,15 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -27,10 +21,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.takeout.ui.Food
 import com.example.takeout.ui.Screen
-import com.example.takeout.ui.data.DataSource
 import com.example.takeout.ui.services.FoodStorageService
-import kotlinx.coroutines.flow.toList
-import java.text.DateFormat
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Composable
 fun FoodListScreen(
@@ -50,13 +43,16 @@ fun FoodListScreen(
     }
 }
 
+
+
 @Composable
 fun FoodItem(
     food: Food,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val dateString = DateFormat.getDateInstance().format(food.date)
+    val date = Instant.ofEpochMilli(food.date).atZone(ZoneOffset.UTC).toLocalDate()
+    val dateString = date.format(dateFormatter)
     Column(
         modifier = modifier
             .fillMaxWidth()

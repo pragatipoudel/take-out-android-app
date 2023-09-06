@@ -1,6 +1,5 @@
 package com.example.takeout.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -24,11 +22,8 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,12 +31,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.takeout.ui.Food
 import com.example.takeout.ui.model.TakeoutViewModel
 import com.example.takeout.ui.services.FoodStorageService
 import kotlinx.coroutines.launch
-import java.text.DateFormat
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
+
+var dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
 
 @ExperimentalMaterial3Api
 @Composable
@@ -66,7 +65,8 @@ fun FoodItemScreen(
         return
     }
 
-    val dateString = DateFormat.getDateInstance().format(takeOutUiState.date)
+    val date = Instant.ofEpochMilli(takeOutUiState.date).atZone(ZoneOffset.UTC).toLocalDate()
+    val dateString = date.format(dateFormatter)
 
     Column(
         modifier = modifier
